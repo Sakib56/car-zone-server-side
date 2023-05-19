@@ -26,7 +26,6 @@ async function run() {
         // Connect the client to the server	(optional starting in v4.7)
         await client.connect();
 
-
         const toysCollection = client.db('CarZoneKids').collection('allToys');
         // console.log(categoriesCollection)
 
@@ -108,6 +107,16 @@ async function run() {
             const result = await toysCollection.updateOne(filter, updatedToys, option)
             res.send(result)
         })
+
+        // delete toy
+        app.delete('/toyDelete/:id', async (req, res) => {
+            const id = req.params.id;
+            console.log(id)
+            const query = { _id: new ObjectId(id) }
+            const result = await toysCollection.deleteOne(query)
+            res.send(result)
+        })
+
 
 
         // Send a ping to confirm a successful connection
