@@ -33,7 +33,7 @@ async function run() {
         // Creating index on two fields
         const indexKeys = { toy_name: 1 }; // Replace field1 and field2 with your actual field names
         const indexOptions = { name: "toy_name" }; // Replace index_name with the desired index name
-        const result = await toysCollection.createIndex(indexKeys,indexOptions)
+        const result = await toysCollection.createIndex(indexKeys, indexOptions)
         console.log(result);
 
         //------ categories  routes --------
@@ -53,6 +53,7 @@ async function run() {
 
         app.get("/getToysByText/:text", async (req, res) => {
             const text = req.params.text;
+            // console.log(text)                     
             const result = await toysCollection
                 .find({
                     $or: [
@@ -61,7 +62,15 @@ async function run() {
                 })
                 .toArray();
             res.send(result);
+
         });
+
+        app.post('/allToys', async (req, res) => {
+            const toys = req.body;
+            console.log('New toys', toys)
+            const result = await toysCollection.insertOne(toys);
+            res.send(result)
+        })
 
 
         // Send a ping to confirm a successful connection
