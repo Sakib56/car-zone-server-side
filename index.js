@@ -43,7 +43,13 @@ async function run() {
             res.send(result)
         })
 
-        app.get('/allToys/:id', async (req, res) => {
+        app.get('/toyDetails/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: new ObjectId(id) }
+            const result = await toysCollection.findOne(query)
+            res.send(result)
+        })
+        app.get('/toyUpdate/:id', async (req, res) => {
             const id = req.params.id;
             const query = { _id: new ObjectId(id) }
             const result = await toysCollection.findOne(query)
@@ -65,10 +71,41 @@ async function run() {
 
         });
 
+        app.get('/toysByEmail/:email', async (req, res) => {
+            const email = req.params.email;
+            console.log(email)
+            const query = { seller_email: email }
+            const result = await toysCollection.find(query).toArray()
+            res.send(result)
+        })
+
         app.post('/allToys', async (req, res) => {
             const toys = req.body;
             console.log('New toys', toys)
             const result = await toysCollection.insertOne(toys);
+            res.send(result)
+        })
+
+        // update data
+        app.put('/toyUpdate/:id', async (req, res) => {
+            const id = req.params.id;
+            const toy = req.body;
+            console.log(toy)
+            const filter = { _id: new ObjectId(id) }
+            const option = { upset: true };
+            const updatedToys = {
+                $set: {
+                    picture: toy.picture,
+                    toy_name: toy.toy_name,
+                    seller_name: toy.seller_name,
+                    category_name: toy.category_name,
+                    price: toy.price,
+                    rating: toy.rating,
+                    available_quantity: toy.available_quantity,
+                    details_description: toy.details_description,
+                }
+            }
+            const result = await toysCollection.updateOne(filter, updatedToys, option)
             res.send(result)
         })
 
