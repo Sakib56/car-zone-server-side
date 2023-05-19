@@ -27,17 +27,17 @@ async function run() {
         await client.connect();
 
 
-        const categoriesCollection = client.db('CarZoneKids').collection('categories');
+        const categoriesCollection = client.db('CarZoneKids').collection('allToys');
         // console.log(categoriesCollection)
 
         //------ categories  routes --------
-        app.get('/categories', async (req, res) => {
+        app.get('/allToys', async (req, res) => {
             const cursor = categoriesCollection.find()
             const result = await cursor.toArray()
             res.send(result)
         })
 
-        app.get('/categories/:id', async (req, res) => {
+        app.get('/allToys/:id', async (req, res) => {
             const id = req.params.id;
             const query = { _id: new ObjectId(id) }
             const result = await categoriesCollection.findOne(query)
