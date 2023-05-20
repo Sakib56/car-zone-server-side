@@ -79,8 +79,8 @@ async function run() {
         })
 
         app.get('/myToys', async (req, res) => {
-            console.log(req.query.email)
-            console.log(req.query.sort)
+            // console.log(req.query.email)
+            // console.log(req.query.sort)
             if (req.query?.email) {
                 query = { seller_email: req.query.email }
                 sort = req.query.sort
@@ -122,7 +122,7 @@ async function run() {
         // delete toy
         app.delete('/toyDelete/:id', async (req, res) => {
             const id = req.params.id;
-            console.log(id)
+            // console.log(id)
             const query = { _id: new ObjectId(id) }
             const result = await toysCollection.deleteOne(query)
             res.json(result)
