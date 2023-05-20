@@ -42,7 +42,7 @@ async function run() {
             res.json(result)
         })
 
-        app.get('/toyDetails/:id', async (req, res) => {
+        app.get('/toy/:id', async (req, res) => {
             const id = req.params.id;
             const query = { _id: new ObjectId(id) }
             const result = await toysCollection.findOne(query)
@@ -74,8 +74,19 @@ async function run() {
             const email = req.params.email;
             // console.log(email)
             const query = { seller_email: email }
-            const result = await toysCollection.find(query).toArray()
+            const result = await toysCollection.find(query).sort({ price: -1 }).toArray();
             res.json(result)
+        })
+
+        app.get('/myToys', async (req, res) => {
+            console.log(req.query.email)
+            console.log(req.query.sort)
+            if (req.query?.email) {
+                query = { seller_email: req.query.email }
+                sort = req.query.sort
+            }
+            const result = await toysCollection.find(query).sort({ price: sort }).toArray()
+            res.send(result)
         })
 
         app.post('/allToys', async (req, res) => {
