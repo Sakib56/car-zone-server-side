@@ -24,35 +24,35 @@ const client = new MongoClient(uri, {
 async function run() {
     try {
         // Connect the client to the server	(optional starting in v4.7)
-        await client.connect();
+        // 
 
         const toysCollection = client.db('CarZoneKids').collection('allToys');
         // console.log(categoriesCollection)
 
         // Creating index on two fields
-        const indexKeys = { toy_name: 1 }; // Replace field1 and field2 with your actual field names
-        const indexOptions = { name: "toy_name" }; // Replace index_name with the desired index name
-        const result = await toysCollection.createIndex(indexKeys, indexOptions)
-        console.log(result);
+        // const indexKeys = { toy_name: 1 }; // Replace field1 and field2 with your actual field names
+        // const indexOptions = { name: "toy_name" }; // Replace index_name with the desired index name
+        // const result = await toysCollection.createIndex(indexKeys, indexOptions)
+        // console.log(result);
 
         //------ categories  routes --------
         app.get('/allToys', async (req, res) => {
             const cursor = toysCollection.find()
             const result = await cursor.toArray()
-            res.send(result)
+            res.json(result)
         })
 
         app.get('/toyDetails/:id', async (req, res) => {
             const id = req.params.id;
             const query = { _id: new ObjectId(id) }
             const result = await toysCollection.findOne(query)
-            res.send(result)
+            res.json(result)
         })
         app.get('/toyUpdate/:id', async (req, res) => {
             const id = req.params.id;
             const query = { _id: new ObjectId(id) }
             const result = await toysCollection.findOne(query)
-            res.send(result)
+            res.json(result)
         })
 
 
@@ -66,30 +66,30 @@ async function run() {
                     ],
                 })
                 .toArray();
-            res.send(result);
+            res.json(result);
 
         });
 
         app.get('/toysByEmail/:email', async (req, res) => {
             const email = req.params.email;
-            console.log(email)
+            // console.log(email)
             const query = { seller_email: email }
             const result = await toysCollection.find(query).toArray()
-            res.send(result)
+            res.json(result)
         })
 
         app.post('/allToys', async (req, res) => {
             const toys = req.body;
-            console.log('New toys', toys)
+            // console.log('New toys', toys)
             const result = await toysCollection.insertOne(toys);
-            res.send(result)
+            res.json(result)
         })
 
         // update data
         app.put('/toyUpdate/:id', async (req, res) => {
             const id = req.params.id;
             const toy = req.body;
-            console.log(toy)
+            // console.log(toy)
             const filter = { _id: new ObjectId(id) }
             const option = { upset: true };
             const updatedToys = {
@@ -105,7 +105,7 @@ async function run() {
                 }
             }
             const result = await toysCollection.updateOne(filter, updatedToys, option)
-            res.send(result)
+            res.json(result)
         })
 
         // delete toy
@@ -114,17 +114,17 @@ async function run() {
             console.log(id)
             const query = { _id: new ObjectId(id) }
             const result = await toysCollection.deleteOne(query)
-            res.send(result)
+            res.json(result)
         })
 
 
 
         // Send a ping to confirm a successful connection
-        await client.db("admin").command({ ping: 1 });
-        console.log("Pinged your deployment. You successfully connected to MongoDB!");
+        // await client.db("admin").command({ ping: 1 });
+        // console.log("Pinged your deployment. You successfully connected to MongoDB!");
     } finally {
         // Ensures that the client will close when you finish/error
-        // await client.close();
+        // 
     }
 }
 run().catch(console.dir);
